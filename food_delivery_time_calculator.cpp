@@ -89,9 +89,9 @@ void Food_Delivery_Time_Calculator(queue<Order> Orders)
         if(cooking_slot<=total_cooking_slot)
         {
             remaining_slot-= cooking_slot;
-            cout<<"Cooking time : " <<cooking_time<<endl;
+         //   cout<<"Cooking time : " <<cooking_time<<endl;
             delivery_time += (cooking_time+ (curr.distance*dist_rest));
-            cout<<"Traveling time " <<(curr.distance*dist_rest)<<endl;
+         //   cout<<"Traveling time " <<(curr.distance*dist_rest)<<endl;
             if(remaining_slot<0)
             {
                 AdditionalTime _at = delivery_time_record.top();
@@ -111,7 +111,7 @@ void Food_Delivery_Time_Calculator(queue<Order> Orders)
                     waiting_time = _at.delivery_time;
                     available_slots = _at.cooking_slot;
                 }
-                  cout<<"Waiting time :"<<waiting_time<<" available slot "<<available_slots<<endl;
+               //   cout<<"Waiting time :"<<waiting_time<<" available slot "<<available_slots<<endl;
 
                 delivery_time += waiting_time;
                 if(delivery_time> 150)
