@@ -146,7 +146,6 @@ int main()
 {
 
     map<string, int> temp1;
- //   temp1["M"] = 2;
     temp1["A"] =2;
     Order order1(12, temp1,5);
     temp1["A"] = 1;
