@@ -94,8 +94,8 @@ void Food_Delivery_Time_Calculator(queue<Order> Orders)
 
 
         }
-      //  cout<<"Cooking time : " <<cooking_time<<endl;
-       // cout<<"Traveling time " <<(curr.distance*dist_rest)<<endl;
+        //  cout<<"Cooking time : " <<cooking_time<<endl;
+        // cout<<"Traveling time " <<(curr.distance*dist_rest)<<endl;
         if(cooking_slot>total_cooking_slot)
         {
             cout<<"Order "<<curr.order_id<<" is denied because the restaurant cannot accommodate it "<<endl;
@@ -124,11 +124,11 @@ void Food_Delivery_Time_Calculator(queue<Order> Orders)
                 AdditionalTime _at = delivery_time_record.top();
                 waiting_time = _at.delivery_time;
                 available_slots = _at.cooking_slot;
-               //  cout<<"First time :"<<" Waiting time :"<<waiting_time<<" available slot "<<available_slots<<endl;
-                 if(cooking_slot<=available_slots+remaining_slot)
+                //  cout<<"First time :"<<" Waiting time :"<<waiting_time<<" available slot "<<available_slots<<endl;
+                if(cooking_slot<=available_slots+remaining_slot)
                 {
                     available_slots-= (cooking_slot-remaining_slot);
-                   //  cout<<"If condition :"<<" Waiting time :"<<waiting_time<<" available slot "<<available_slots<<endl;
+                    //  cout<<"If condition :"<<" Waiting time :"<<waiting_time<<" available slot "<<available_slots<<endl;
                     remaining_slot =0;
                     delivery_time_record.pop();
                     AdditionalTime temp(available_slots, waiting_time);
@@ -138,28 +138,28 @@ void Food_Delivery_Time_Calculator(queue<Order> Orders)
                 {
                     while(cooking_slot>available_slots+remaining_slot)
                     {
-                    delivery_time_record.pop();
-                    _at = delivery_time_record.top();
+                        delivery_time_record.pop();
+                        _at = delivery_time_record.top();
 
-                    if(waiting_time==_at.delivery_time)
-                    {
-                        while(!delivery_time_record.empty() && waiting_time==_at.delivery_time)
+                        if(waiting_time==_at.delivery_time)
                         {
-                        waiting_time = _at.delivery_time;
-                         available_slots += _at.cooking_slot;
-                         delivery_time_record.pop();
-                         _at = delivery_time_record.top();
+                            while(!delivery_time_record.empty() && waiting_time==_at.delivery_time)
+                            {
+                                waiting_time = _at.delivery_time;
+                                available_slots += _at.cooking_slot;
+                                delivery_time_record.pop();
+                                _at = delivery_time_record.top();
 
+                            }
                         }
-                    }
-                    waiting_time = _at.delivery_time;
-                    available_slots += _at.cooking_slot;
-                  //  cout<<"else condition :"<<" Waiting time :"<<waiting_time<<" available slot "<<available_slots<<endl;
+                        waiting_time = _at.delivery_time;
+                        available_slots += _at.cooking_slot;
+                        //  cout<<"else condition :"<<" Waiting time :"<<waiting_time<<" available slot "<<available_slots<<endl;
 
                     }
 
                 }
-              // cout<<"Final Print : Waiting time :"<<waiting_time<<" available slot "<<available_slots<<endl;
+                // cout<<"Final Print : Waiting time :"<<waiting_time<<" available slot "<<available_slots<<endl;
 
                 delivery_time += waiting_time;
                 if(delivery_time> 150)
