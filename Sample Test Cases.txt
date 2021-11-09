@@ -55,3 +55,28 @@ Order 21 will get delivered in 37 minutes
 Order 32 will get delivered in 29.8 minutes
 Order 14 is denied because the restaurant cannot accommodate it
 Order 22 will get delivered in 70.8 minutes
+
+TC:4
+12, [A], 0.25
+21, [A,A], 0.25
+14, [ A, A, A], 0.25
+22, [A, A, A,A,A], 0.25
+
+Order 12 will get delivered in 19 minutes
+Order 21 will get delivered in 19 minutes
+Order 14 will get delivered in 19 minutes
+Order 22 will get delivered in 38 minutes
+
+TC:5
+12, [A], 0.25
+21, [A,A], 0.25
+23, [A,A], 0.25
+14, [ A, A], 0.25
+22, [A, A, A,A,A,A,A], 0.25
+
+Order 12 will get delivered in 19 minutes
+Order 21 will get delivered in 19 minutes
+Order 23 will get delivered in 19 minutes
+Order 14 will get delivered in 19 minutes
+Order 22 will get delivered in 38 minutes
+

@@ -63,6 +63,8 @@ void Food_Delivery_Time_Calculator(queue<Order> Orders)
     float  appetiser_cooking_time = 17;
     float main_course_cooking_time = 29;
     float dist_rest = 8;
+    float waiting_time;
+    float available_slots;
     priority_queue<AdditionalTime, vector<AdditionalTime>,CompareDeliveryTime > delivery_time_record;
     while(!Orders.empty())
     {
@@ -92,8 +94,8 @@ void Food_Delivery_Time_Calculator(queue<Order> Orders)
 
 
         }
-        cout<<"Cooking time : " <<cooking_time<<endl;
-        cout<<"Traveling time " <<(curr.distance*dist_rest)<<endl;
+      //  cout<<"Cooking time : " <<cooking_time<<endl;
+       // cout<<"Traveling time " <<(curr.distance*dist_rest)<<endl;
         if(cooking_slot>total_cooking_slot)
         {
             cout<<"Order "<<curr.order_id<<" is denied because the restaurant cannot accommodate it "<<endl;
@@ -103,7 +105,7 @@ void Food_Delivery_Time_Calculator(queue<Order> Orders)
         else
         {
             delivery_time += (cooking_time+ (curr.distance*dist_rest));
-            ///No waiting required
+            ///No waiting required because there are available slots
             if(remaining_slot>=cooking_slot)
             {
                 remaining_slot-= cooking_slot;
@@ -120,15 +122,13 @@ void Food_Delivery_Time_Calculator(queue<Order> Orders)
             else
             {
                 AdditionalTime _at = delivery_time_record.top();
-                float waiting_time = _at.delivery_time;
-                float available_slots = _at.cooking_slot;
-                 cout<<"First time :"<<" Waiting time :"<<waiting_time<<" available slot "<<available_slots<<endl;
-                if(cooking_slot<=available_slots+remaining_slot)
+                waiting_time = _at.delivery_time;
+                available_slots = _at.cooking_slot;
+               //  cout<<"First time :"<<" Waiting time :"<<waiting_time<<" available slot "<<available_slots<<endl;
+                 if(cooking_slot<=available_slots+remaining_slot)
                 {
-
                     available_slots-= (cooking_slot-remaining_slot);
-                      cout<<"If condition :"<<" Waiting time :"<<waiting_time<<" available slot "<<available_slots<<endl;
-
+                   //  cout<<"If condition :"<<" Waiting time :"<<waiting_time<<" available slot "<<available_slots<<endl;
                     remaining_slot =0;
                     delivery_time_record.pop();
                     AdditionalTime temp(available_slots, waiting_time);
@@ -136,14 +136,30 @@ void Food_Delivery_Time_Calculator(queue<Order> Orders)
                 }
                 else
                 {
+                    while(cooking_slot>available_slots+remaining_slot)
+                    {
                     delivery_time_record.pop();
                     _at = delivery_time_record.top();
-                    waiting_time += _at.delivery_time;
+
+                    if(waiting_time==_at.delivery_time)
+                    {
+                        while(!delivery_time_record.empty() && waiting_time==_at.delivery_time)
+                        {
+                        waiting_time = _at.delivery_time;
+                         available_slots += _at.cooking_slot;
+                         delivery_time_record.pop();
+                         _at = delivery_time_record.top();
+
+                        }
+                    }
+                    waiting_time = _at.delivery_time;
                     available_slots += _at.cooking_slot;
-                       cout<<"else condition :"<<" Waiting time :"<<waiting_time<<" available slot "<<available_slots<<endl;
+                  //  cout<<"else condition :"<<" Waiting time :"<<waiting_time<<" available slot "<<available_slots<<endl;
+
+                    }
 
                 }
-                cout<<"Final Print : Waiting time :"<<waiting_time<<" available slot "<<available_slots<<endl;
+              // cout<<"Final Print : Waiting time :"<<waiting_time<<" available slot "<<available_slots<<endl;
 
                 delivery_time += waiting_time;
                 if(delivery_time> 150)
@@ -227,56 +243,5 @@ Order 21 will get delivered in 37 minutes
 Order 32 will get delivered in 29.8 minutes
 Order 14 is denied because the restaurant cannot accommodate it
 Order 22 will get delivered in 70.8 minutes
-12,[A=>2],5
-21,[A=>1],[M=>1],1
-32,[M=>1],0.1
-14,[A=>3],[M=>4],10
-22,[A=>1],3
-
-
-
-TC:1
-12, [A, A, A, M, M], 5
-21, [A, M], 1
-32, [M], 0.1
-14, [M, M, M, M, A, A, A], 10
-22, [A, A, A], 3
-
-Order 12 will get delivered in 69 minutes
-Order 21 will get delivered in 106 minutes
-Order 32 will get delivered in 98.8 minutes
-Order 14 is denied because the restaurant cannot accommodate it
-Order 22 will get delivered in 139.8 minutes
-
-
-TC:2
-12, [M, M, M], 5
-21, [A, M], 1
-32, [M], 0.1
-14, [M, M, M, M, A, A, A], 10
-22, [A, A, A], 3
-
-Order 12 will get delivered in 69 minutes
-Order 21 will get delivered in 106 minutes
-Order 32 will get delivered in 98.8 minutes
-Order 14 is denied because the restaurant cannot accommodate it
-Order 22 will get delivered in 139.8 minutes
-
-
-TC:3
-12, [M, M, M, A, A], 5
-21, [A, M], 1
-32, [M], 0.1
-14, [M, M, M, M, A, A, A], 10
-22, [A, A, A], 3
-
-Order 12 is denied because the restaurant cannot accommodate it
-Order 21 will get delivered in 37 minutes
-Order 32 will get delivered in 29.8 minutes
-Order 14 is denied because the restaurant cannot accommodate it
-Order 22 will get delivered in 70.8 minutes
-
-
-
 
 */
