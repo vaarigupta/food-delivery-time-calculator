@@ -5,9 +5,9 @@ class Order
 {
 public:
     int order_id;
-    map<char,int> meals;
+    unordered_map<char,int> meals;
     float distance;
-    Order(int id, map<char,int> m, float dist )
+    Order(int id, unordered_map<char,int> m, float dist )
     {
         order_id=id;
         meals = m;
@@ -136,7 +136,7 @@ void Food_Delivery_Time_Calculator(queue<Order> Orders)
                 }
                 else
                 {
-                    while(cooking_slot>available_slots+remaining_slot)
+                    while(!delivery_time_record.empty() && cooking_slot>available_slots+remaining_slot)
                     {
                         delivery_time_record.pop();
                         _at = delivery_time_record.top();
@@ -186,7 +186,7 @@ int main()
     string name;
     getline(cin,name,'\t');
     string integral_vals="";
-    map<char,int> mymap;
+    unordered_map<char,int> myunordered_map;
     int i=0;
     queue<Order> q;
     while(i<name.length())
@@ -198,7 +198,7 @@ int main()
             {
                 if(name[i]=='A' || name[i]=='M')
                 {
-                    mymap[name[i]]++;
+                    myunordered_map[name[i]]++;
                 }
                 i++;
             }
@@ -215,9 +215,9 @@ int main()
             float distance;
 
             ss>>order_id>>distance; ///extract data in order till space from ss
-            Order order(order_id,mymap,distance);
+            Order order(order_id,myunordered_map,distance);
             q.push(order);
-            mymap.clear();
+            myunordered_map.clear();
             integral_vals = "";
         }
         i++;
@@ -227,7 +227,9 @@ int main()
     return 0;
 }
 /*
-
+N => no. of orders
+Worst Case Time Complexity : O(NLogN)
+Best Case Time Complexity : O(N)
 
 Sample Input:
 12, [A, A], 5
