@@ -68,39 +68,29 @@ void Food_Delivery_Time_Calculator(queue<Order> Orders)
         if(curr.meals.find('A')!= curr.meals.end() && curr.meals.find('M')!= curr.meals.end())
         {
             cooking_slot+= curr.meals['A'] + 2*curr.meals['M'];
-            if(cooking_slot>total_cooking_slot)
-            {
-                cout<<"Order "<<curr.order_id<<" is denied because the restaurant cannot accommodate it "<<endl;
-                continue;
-            }
             cooking_time += main_course_cooking_time;
         }
 
         else if(curr.meals.find('A')!= curr.meals.end())
         {
             cooking_slot += curr.meals['A'];
-            if(cooking_slot>total_cooking_slot)
-            {
-                cout<<"Order "<<curr.order_id<<" is denied because the restaurant cannot accommodate it "<<endl;
-                continue;
-            }
             cooking_time += appetiser_cooking_time;
 
         }
         else
         {
             cooking_slot+= 2*curr.meals['M'];
-            if(cooking_slot>total_cooking_slot)
-            {
-                cout<<"Order "<<curr.order_id<<" is denied because the restaurant cannot accommodate it "<<endl;
-                continue;
-            }
             cooking_time+= main_course_cooking_time;
 
 
         }
+        if(cooking_slot>total_cooking_slot)
+        {
+            cout<<"Order "<<curr.order_id<<" is denied because the restaurant cannot accommodate it "<<endl;
+            continue;
+        }
 
-        if(cooking_slot<=total_cooking_slot)
+        else
         {
             delivery_time += (cooking_time+ (curr.distance*dist_rest));
             ///No waiting required
@@ -184,7 +174,6 @@ int main()
                 i++;
             }
         }
-
         if(name[i]!=',' && name[i]!='\n' && name[i]!= ']')
         {
             one+= name[i];
@@ -193,7 +182,6 @@ int main()
         {
             stringstream ss;
             ss<<one; ///insert data to ss from one
-            //cout<<one;
             int order_id;
             float distance;
 
