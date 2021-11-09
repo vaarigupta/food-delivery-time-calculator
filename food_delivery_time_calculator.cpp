@@ -22,7 +22,7 @@ public:
         {
             cout<<"["<<m.first<< "=>"<<m.second<<"]"<<",";
         }
-         cout<<distance<<endl;
+        cout<<distance<<endl;
 
     }
 
@@ -35,13 +35,14 @@ public:
     float delivery_time;
 
     AdditionalTime(int slot, float time)
-    : cooking_slot(slot), delivery_time(time)
+        : cooking_slot(slot), delivery_time(time)
     {
     }
 
 };
 
-struct CompareDeliveryTime {
+struct CompareDeliveryTime
+{
     bool operator()(const AdditionalTime& p1,const AdditionalTime& p2)
     {
         return p1.delivery_time >p2.delivery_time;
@@ -50,11 +51,11 @@ struct CompareDeliveryTime {
 void Food_Delivery_Time_Calculator(queue<Order> Orders)
 {
     int total_cooking_slot = 7;
-     int remaining_slot =7;
+    int remaining_slot =7;
     float  appetiser_cooking_time = 17;
     float main_course_cooking_time = 29;
-   float dist_rest = 8;
-   priority_queue<AdditionalTime, vector<AdditionalTime>,CompareDeliveryTime > delivery_time_record;
+    float dist_rest = 8;
+    priority_queue<AdditionalTime, vector<AdditionalTime>,CompareDeliveryTime > delivery_time_record;
     while(!Orders.empty())
     {
         Order curr = Orders.front();
@@ -67,7 +68,7 @@ void Food_Delivery_Time_Calculator(queue<Order> Orders)
         if(curr.meals.find('A')!= curr.meals.end() && curr.meals.find('M')!= curr.meals.end())
         {
             cooking_slot+= curr.meals['A'] + 2*curr.meals['M'];
-             if(cooking_slot>total_cooking_slot)
+            if(cooking_slot>total_cooking_slot)
             {
                 cout<<"Order "<<curr.order_id<<" is denied because the restaurant cannot accommodate it "<<endl;
                 continue;
@@ -78,23 +79,23 @@ void Food_Delivery_Time_Calculator(queue<Order> Orders)
         else if(curr.meals.find('A')!= curr.meals.end())
         {
             cooking_slot += curr.meals['A'];
-               if(cooking_slot>total_cooking_slot)
+            if(cooking_slot>total_cooking_slot)
             {
                 cout<<"Order "<<curr.order_id<<" is denied because the restaurant cannot accommodate it "<<endl;
                 continue;
             }
-             cooking_time += appetiser_cooking_time;
+            cooking_time += appetiser_cooking_time;
 
         }
         else
         {
-             cooking_slot+= 2*curr.meals['M'];
-                 if(cooking_slot>total_cooking_slot)
+            cooking_slot+= 2*curr.meals['M'];
+            if(cooking_slot>total_cooking_slot)
             {
                 cout<<"Order "<<curr.order_id<<" is denied because the restaurant cannot accommodate it "<<endl;
                 continue;
             }
-             cooking_time+= main_course_cooking_time;
+            cooking_time+= main_course_cooking_time;
 
 
         }
@@ -109,20 +110,20 @@ void Food_Delivery_Time_Calculator(queue<Order> Orders)
                 if(delivery_time> 150)
                 {
                     cout<<"Order "<<curr.order_id<<" is denied because the delivery time is too high "<<endl;
-                        continue;
+                    continue;
                 }
                 cout<<"Order "<<curr.order_id<<" will get delivered in "<<delivery_time<<" minutes"<<endl;
             }
 
-         //   cout<<"Cooking time : " <<cooking_time<<endl;
-         //   cout<<"Traveling time " <<(curr.distance*dist_rest)<<endl;
-         ///Waiting Required - we will use heap to get mininum waiting time
+            //   cout<<"Cooking time : " <<cooking_time<<endl;
+            //   cout<<"Traveling time " <<(curr.distance*dist_rest)<<endl;
+            ///Waiting Required - we will use heap to get mininum waiting time
             else
             {
                 AdditionalTime _at = delivery_time_record.top();
                 float waiting_time = _at.delivery_time;
                 float available_slots = _at.cooking_slot;
-               if(cooking_slot<=available_slots+remaining_slot)
+                if(cooking_slot<=available_slots+remaining_slot)
                 {
 
                     available_slots-= (cooking_slot-remaining_slot);
@@ -138,7 +139,7 @@ void Food_Delivery_Time_Calculator(queue<Order> Orders)
                     waiting_time = _at.delivery_time;
                     available_slots += _at.cooking_slot;
                 }
-               //   cout<<"Waiting time :"<<waiting_time<<" available slot "<<available_slots<<endl;
+                //   cout<<"Waiting time :"<<waiting_time<<" available slot "<<available_slots<<endl;
 
                 delivery_time += waiting_time;
                 if(delivery_time> 150)
@@ -151,7 +152,7 @@ void Food_Delivery_Time_Calculator(queue<Order> Orders)
 
             }
             AdditionalTime _additional_time(cooking_slot, delivery_time);
-             delivery_time_record.push(_additional_time);
+            delivery_time_record.push(_additional_time);
 
         }
 
@@ -169,7 +170,7 @@ int main()
     map<char,int> mymap;
     int i=0;
     queue<Order> q;
-   while(i<name.length())
+    while(i<name.length())
     {
         if(name[i]=='[')
         {
@@ -190,22 +191,22 @@ int main()
         }
         if(name[i]=='\n')
         {
-        stringstream ss;
-        ss<<one; ///insert data to ss from one
-        //cout<<one;
-        int order_id;
-        float distance;
+            stringstream ss;
+            ss<<one; ///insert data to ss from one
+            //cout<<one;
+            int order_id;
+            float distance;
 
-        ss>>order_id>>distance; ///extract data in order till space from ss
-        Order order(order_id,mymap,distance);
-        q.push(order);
-        mymap.clear();
-        one = "";
+            ss>>order_id>>distance; ///extract data in order till space from ss
+            Order order(order_id,mymap,distance);
+            q.push(order);
+            mymap.clear();
+            one = "";
         }
         i++;
     }
 
-        Food_Delivery_Time_Calculator(q);
+    Food_Delivery_Time_Calculator(q);
 //        while(!q.empty())
 //    {
 //        Order curr = q.front();
