@@ -1,0 +1,57 @@
+Sample Input:
+12, [A, A], 5
+21, [A, M], 1
+32, [M], 0.1
+14, [M, M, M, M, A, A, A], 10
+22, [A], 3
+
+
+Sample Output:
+Order 12 will get delivered in 57 minutes
+Order 21 will get delivered in 37 minutes
+Order 32 will get delivered in 29.8 minutes
+Order 14 is denied because the restaurant cannot accommodate it
+Order 22 will get delivered in 70.8 minutes
+
+
+
+TC:1
+12, [A, A, A, M, M], 5
+21, [A, M], 1
+32, [M], 0.1
+14, [M, M, M, M, A, A, A], 10
+22, [A, A, A], 3
+
+Order 12 will get delivered in 69 minutes
+Order 21 will get delivered in 106 minutes
+Order 32 will get delivered in 98.8 minutes
+Order 14 is denied because the restaurant cannot accommodate it
+Order 22 will get delivered in 139.8 minutes
+
+
+TC:2
+12, [M, M, M], 5
+21, [A, M], 1
+32, [M], 0.1
+14, [M, M, M, M, A, A, A], 10
+22, [A, A, A], 3
+
+Order 12 will get delivered in 69 minutes
+Order 21 will get delivered in 106 minutes
+Order 32 will get delivered in 98.8 minutes
+Order 14 is denied because the restaurant cannot accommodate it
+Order 22 will get delivered in 139.8 minutes
+
+
+TC:3
+12, [M, M, M, A, A], 5
+21, [A, M], 1
+32, [M], 0.1
+14, [M, M, M, M, A, A, A], 10
+22, [A, A, A], 3
+
+Order 12 is denied because the restaurant cannot accommodate it
+Order 21 will get delivered in 37 minutes
+Order 32 will get delivered in 29.8 minutes
+Order 14 is denied because the restaurant cannot accommodate it
+Order 22 will get delivered in 70.8 minutes

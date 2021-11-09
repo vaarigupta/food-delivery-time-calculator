@@ -1,5 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
+///Object to represent the blueprint of the order having orderID , meals to be delivered and distance from restaurant
 class Order
 {
 public:
@@ -15,18 +16,19 @@ public:
 
     void Print()
     {
-
-        cout<<order_id<<",";
+        cout<<"Order ID : "<<order_id<<"endl";
 
         for(auto m: meals)
         {
-            cout<<"["<<m.first<< "=>"<<m.second<<"]"<<",";
+            cout<<"["<<m.first<< "=>"<<m.second<<"] ,";
         }
-        cout<<distance<<endl;
+        cout<<endl<<"Distance from Restuarant : "<<distance<<endl;
 
     }
 
 };
+
+///Object to determine if waiting period required or not => keeps the record of delivery time and cooking slot required in every order
 class AdditionalTime
 {
 
@@ -41,6 +43,7 @@ public:
 
 };
 
+///Functor to compare the order objects based on their delivery time in the heap
 struct CompareDeliveryTime
 {
     bool operator()(const AdditionalTime& p1,const AdditionalTime& p2)
@@ -48,6 +51,7 @@ struct CompareDeliveryTime
         return p1.delivery_time >p2.delivery_time;
     }
 };
+///Function to determine the delivery time for each orders present in the queue
 void Food_Delivery_Time_Calculator(queue<Order> Orders)
 {
     int total_cooking_slot = 7;
@@ -155,8 +159,7 @@ int main()
 {
     string name;
     getline(cin,name,'\t');
-    string one="";
-    vector<string> str;
+    string integral_vals="";
     map<char,int> mymap;
     int i=0;
     queue<Order> q;
@@ -176,12 +179,12 @@ int main()
         }
         if(name[i]!=',' && name[i]!='\n' && name[i]!= ']')
         {
-            one+= name[i];
+            integral_vals+= name[i];
         }
         if(name[i]=='\n')
         {
             stringstream ss;
-            ss<<one; ///insert data to ss from one
+            ss<<integral_vals; ///insert data to ss from one
             int order_id;
             float distance;
 
@@ -189,27 +192,12 @@ int main()
             Order order(order_id,mymap,distance);
             q.push(order);
             mymap.clear();
-            one = "";
+            integral_vals = "";
         }
         i++;
     }
 
     Food_Delivery_Time_Calculator(q);
-//        while(!q.empty())
-//    {
-//        Order curr = q.front();
-//        q.pop();
-//        cout<<curr.order_id<<",";
-//
-//        for(auto m: curr.meals)
-//        {
-//            cout<<"["<<m.first<< "=>"<<m.second<<"]"<<",";
-//        }
-//         cout<<curr.distance<<endl;
-//    }
-
-
-
     return 0;
 }
 /*
