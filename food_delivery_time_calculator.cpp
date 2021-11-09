@@ -136,7 +136,7 @@ void Food_Delivery_Time_Calculator(queue<Order> Orders)
                     delivery_time_record.pop();
                     _at = delivery_time_record.top();
                     waiting_time = _at.delivery_time;
-                    available_slots = _at.cooking_slot;
+                    available_slots += _at.cooking_slot;
                 }
                //   cout<<"Waiting time :"<<waiting_time<<" available slot "<<available_slots<<endl;
 
@@ -276,7 +276,7 @@ Order 14 is denied because the restaurant cannot accommodate it
 Order 22 will get delivered in 139.8 minutes
 
 
-TC:4
+TC:3
 12, [M, M, M, A, A], 5
 21, [A, M], 1
 32, [M], 0.1
@@ -287,31 +287,9 @@ Order 12 is denied because the restaurant cannot accommodate it
 Order 21 will get delivered in 37 minutes
 Order 32 will get delivered in 29.8 minutes
 Order 14 is denied because the restaurant cannot accommodate it
-Order 22 will get delivered in 78 minutes
+Order 22 will get delivered in 70.8 minutes
 
 
-TC:5
-Cooking time : 29
-Traveling time 40
-Order 12 will get delivered in 69 minutes
-Cooking time : 29
-Traveling time 8
-Waiting time :69 available slot 4
-Order 21 will get delivered in 106 minutes
-Cooking time : 29
-Traveling time 0.8
-Waiting time :69 available slot 2
-Order 32 will get delivered in 98.8 minutes
-Order 14 is denied because the restaurant cannot accommodate it
-Cooking time : 17
-Traveling time 24
-Waiting time :98.8 available slot 2
-Order 22 will get delivered in 139.8 minutes
-12,[A=>3],[M=>2],5
-21,[A=>1],[M=>1],1
-32,[M=>1],0.1
-14,[A=>3],[M=>4],10
-22,[A=>3],3
 
 
 */
