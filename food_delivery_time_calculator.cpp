@@ -4,13 +4,26 @@ class Order
 {
 public:
     int order_id;
-    map<string,int> meals;
+    map<char,int> meals;
     float distance;
-    Order(int id, map<string,int> m, float dist )
+    Order(int id, map<char,int> m, float dist )
     {
         order_id=id;
         meals = m;
         distance = dist;
+    }
+
+    void Print()
+    {
+
+        cout<<order_id<<",";
+
+        for(auto m: meals)
+        {
+            cout<<"["<<m.first<< "=>"<<m.second<<"]"<<",";
+        }
+         cout<<distance<<endl;
+
     }
 
 };
@@ -29,9 +42,9 @@ public:
 };
 
 struct CompareDeliveryTime {
-    bool operator()(AdditionalTime const& p1, AdditionalTime const& p2)
+    bool operator()(const AdditionalTime& p1,const AdditionalTime& p2)
     {
-        return p1.delivery_time > p2.delivery_time;
+        return p1.delivery_time >p2.delivery_time;
     }
 };
 void Food_Delivery_Time_Calculator(queue<Order> Orders)
@@ -51,9 +64,9 @@ void Food_Delivery_Time_Calculator(queue<Order> Orders)
         int cooking_slot=0;
 
         bool appetiser_present = false;
-        if(curr.meals.find("A")!= curr.meals.end() && curr.meals.find("M")!= curr.meals.end())
+        if(curr.meals.find('A')!= curr.meals.end() && curr.meals.find('M')!= curr.meals.end())
         {
-            cooking_slot+= curr.meals["A"] + 2*curr.meals["M"];
+            cooking_slot+= curr.meals['A'] + 2*curr.meals['M'];
              if(cooking_slot>total_cooking_slot)
             {
                 cout<<"Order "<<curr.order_id<<" is denied because the restaurant cannot accommodate it "<<endl;
@@ -62,9 +75,9 @@ void Food_Delivery_Time_Calculator(queue<Order> Orders)
             cooking_time += main_course_cooking_time;
         }
 
-        else if(curr.meals.find("A")!= curr.meals.end())
+        else if(curr.meals.find('A')!= curr.meals.end())
         {
-            cooking_slot += curr.meals["A"];
+            cooking_slot += curr.meals['A'];
                if(cooking_slot>total_cooking_slot)
             {
                 cout<<"Order "<<curr.order_id<<" is denied because the restaurant cannot accommodate it "<<endl;
@@ -75,7 +88,7 @@ void Food_Delivery_Time_Calculator(queue<Order> Orders)
         }
         else
         {
-             cooking_slot+= 2*curr.meals["M"];
+             cooking_slot+= 2*curr.meals['M'];
                  if(cooking_slot>total_cooking_slot)
             {
                 cout<<"Order "<<curr.order_id<<" is denied because the restaurant cannot accommodate it "<<endl;
@@ -88,18 +101,32 @@ void Food_Delivery_Time_Calculator(queue<Order> Orders)
 
         if(cooking_slot<=total_cooking_slot)
         {
-            remaining_slot-= cooking_slot;
-         //   cout<<"Cooking time : " <<cooking_time<<endl;
             delivery_time += (cooking_time+ (curr.distance*dist_rest));
+            ///No waiting required
+            if(remaining_slot>=cooking_slot)
+            {
+                remaining_slot-= cooking_slot;
+                if(delivery_time> 150)
+                {
+                    cout<<"Order "<<curr.order_id<<" is denied because the delivery time is too high "<<endl;
+                        continue;
+                }
+                cout<<"Order "<<curr.order_id<<" will get delivered in "<<delivery_time<<" minutes"<<endl;
+            }
+
+         //   cout<<"Cooking time : " <<cooking_time<<endl;
          //   cout<<"Traveling time " <<(curr.distance*dist_rest)<<endl;
-            if(remaining_slot<0)
+         ///Waiting Required - we will use heap to get mininum waiting time
+            else
             {
                 AdditionalTime _at = delivery_time_record.top();
                 float waiting_time = _at.delivery_time;
                 float available_slots = _at.cooking_slot;
-               if(cooking_slot<=available_slots)
+               if(cooking_slot<=available_slots+remaining_slot)
                 {
-                    available_slots-= cooking_slot;
+
+                    available_slots-= (cooking_slot-remaining_slot);
+                    remaining_slot =0;
                     delivery_time_record.pop();
                     AdditionalTime temp(available_slots, waiting_time);
                     delivery_time_record.push(temp);
@@ -123,15 +150,6 @@ void Food_Delivery_Time_Calculator(queue<Order> Orders)
                 cout<<"Order "<<curr.order_id<<" will get delivered in "<<delivery_time<<" minutes"<<endl;
 
             }
-            else
-            {
-                if(delivery_time> 150)
-                {
-                    cout<<"Order "<<curr.order_id<<" is denied because the delivery time is too high "<<endl;
-                        continue;
-                }
-                cout<<"Order "<<curr.order_id<<" will get delivered in "<<delivery_time<<" minutes"<<endl;
-            }
             AdditionalTime _additional_time(cooking_slot, delivery_time);
              delivery_time_record.push(_additional_time);
 
@@ -144,44 +162,62 @@ void Food_Delivery_Time_Calculator(queue<Order> Orders)
 }
 int main()
 {
-
-    map<string, int> temp1;
-    temp1["A"] =2;
-    Order order1(12, temp1,5);
-    temp1["A"] = 1;
-    temp1["M"] = 1;
-    Order order2(21, temp1,1);
-    temp1.erase("A");
-    temp1["M"] = 1;
-    Order order3(32, temp1,0.1);
-    temp1["A"] = 3;
-    temp1["M"] = 4;
-    Order order4(14, temp1,10);
-    temp1.erase("M");
-    temp1["A"] =1;
-    Order order5(22, temp1,3);
+    string name;
+    getline(cin,name,'\t');
+    string one="";
+    vector<string> str;
+    map<char,int> mymap;
+    int i=0;
     queue<Order> q;
-    q.push(order1);
-     q.push(order2);
-      q.push(order3);
-       q.push(order4);
-        q.push(order5);
-
-
-    Food_Delivery_Time_Calculator(q);
-
-        while(!q.empty())
+   while(i<name.length())
     {
-        Order curr = q.front();
-        q.pop();
-        cout<<curr.order_id<<",";
-
-        for(auto m: curr.meals)
+        if(name[i]=='[')
         {
-            cout<<"["<<m.first<< "=>"<<m.second<<"]"<<",";
+            i++;
+            while(name[i]!=']')
+            {
+                if(name[i]=='A' || name[i]=='M')
+                {
+                    mymap[name[i]]++;
+                }
+                i++;
+            }
         }
-         cout<<curr.distance<<endl;
+
+        if(name[i]!=',' && name[i]!='\n' && name[i]!= ']')
+        {
+            one+= name[i];
+        }
+        if(name[i]=='\n')
+        {
+        stringstream ss;
+        ss<<one; ///insert data to ss from one
+        //cout<<one;
+        int order_id;
+        float distance;
+
+        ss>>order_id>>distance; ///extract data in order till space from ss
+        Order order(order_id,mymap,distance);
+        q.push(order);
+        mymap.clear();
+        one = "";
+        }
+        i++;
     }
+
+        Food_Delivery_Time_Calculator(q);
+//        while(!q.empty())
+//    {
+//        Order curr = q.front();
+//        q.pop();
+//        cout<<curr.order_id<<",";
+//
+//        for(auto m: curr.meals)
+//        {
+//            cout<<"["<<m.first<< "=>"<<m.second<<"]"<<",";
+//        }
+//         cout<<curr.distance<<endl;
+//    }
 
 
 
@@ -189,72 +225,69 @@ int main()
 }
 /*
 
-TC:1
-Cooking time : 17
+
+Sample Input:
+12, [A, A], 5
+21, [A, M], 1
+32, [M], 0.1
+14, [M, M, M, M, A, A, A], 10
+22, [A], 3
+
+
+Sample Output:
 Order 12 will get delivered in 57 minutes
-Cooking time : 29
 Order 21 will get delivered in 37 minutes
-Cooking time : 29
 Order 32 will get delivered in 29.8 minutes
 Order 14 is denied because the restaurant cannot accommodate it
-Cooking time : 17
 Order 22 will get delivered in 70.8 minutes
 12,[A=>2],5
 21,[A=>1],[M=>1],1
 32,[M=>1],0.1
 14,[A=>3],[M=>4],10
-22,[A=>3],3
+22,[A=>1],3
+
+
+
+TC:1
+12, [A, A, A, M, M], 5
+21, [A, M], 1
+32, [M], 0.1
+14, [M, M, M, M, A, A, A], 10
+22, [A, A, A], 3
+
+Order 12 will get delivered in 69 minutes
+Order 21 will get delivered in 106 minutes
+Order 32 will get delivered in 98.8 minutes
+Order 14 is denied because the restaurant cannot accommodate it
+Order 22 will get delivered in 139.8 minutes
 
 
 TC:2
-Cooking time : 29
+12, [M, M, M], 5
+21, [A, M], 1
+32, [M], 0.1
+14, [M, M, M, M, A, A, A], 10
+22, [A, A, A], 3
+
 Order 12 will get delivered in 69 minutes
-Cooking time : 29
 Order 21 will get delivered in 106 minutes
-Cooking time : 29
-Order 32 will get delivered in 135.8 minutes
+Order 32 will get delivered in 98.8 minutes
 Order 14 is denied because the restaurant cannot accommodate it
-Cooking time : 17
-Order 22 is denied because the delivery time is too high
-12,[A=>3],[M=>2],5
-21,[A=>1],[M=>1],1
-32,[M=>1],0.1
-14,[A=>3],[M=>4],10
-22,[A=>3],3
-
-
-TC:3
-Cooking time : 29
-Order 12 will get delivered in 109 minutes
-Cooking time : 29
-Order 21 will get delivered in 146 minutes
-Cooking time : 29
-Order 32 is denied because the delivery time is too high
-Order 14 is denied because the restaurant cannot accommodate it
-Cooking time : 17
-Order 22 is denied because the delivery time is too high
-12,[M=>3],10
-21,[A=>1],[M=>1],1
-32,[M=>1],0.1
-14,[A=>3],[M=>4],10
-22,[A=>3],3
+Order 22 will get delivered in 139.8 minutes
 
 
 TC:4
+12, [M, M, M, A, A], 5
+21, [A, M], 1
+32, [M], 0.1
+14, [M, M, M, M, A, A, A], 10
+22, [A, A, A], 3
+
 Order 12 is denied because the restaurant cannot accommodate it
-Cooking time : 29
 Order 21 will get delivered in 37 minutes
-Cooking time : 29
 Order 32 will get delivered in 29.8 minutes
 Order 14 is denied because the restaurant cannot accommodate it
-Cooking time : 17
-Order 22 will get delivered in 70.8 minutes
-12,[A=>2],[M=>3],5
-21,[A=>1],[M=>1],1
-32,[M=>1],0.1
-14,[A=>3],[M=>4],10
-22,[A=>3],3
-
+Order 22 will get delivered in 78 minutes
 
 
 TC:5
